@@ -30,7 +30,7 @@ func TestStatus(t *testing.T) {
 		ctx.Stderr = &stderr
 		ctx.Stdout = &stdout
 		getStatus = func(response *statusResponse) {
-			response.Status.Production = "green"
+			response.Status.Production = "gren"
 		}
 
 		Convey("it gets a foobarred production status", func() {
