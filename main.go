@@ -25,7 +25,7 @@ func main() {
 	}
 	for _, command := range commands {
 		if os.Args[1] == command.Name() {
-			exit(command.Run(os.Args...))
+			exit(command.Run(os.Args[2:]...))
 		}
 	}
 	help()
