@@ -9,4 +9,4 @@ platform:
 build_script:
   - go get -t -v ./...
 test_script:
-  - go test -v ./... -cover
+  - go test ./... -cover
