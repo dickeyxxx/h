@@ -10,7 +10,7 @@ import (
 
 func TestStatus(t *testing.T) {
 	Convey("With a status instance and context", t, func() {
-		ctx := cli.NewContext([]string{})
+		ctx := &cli.Context{}
 		var stderr bytes.Buffer
 		var stdout bytes.Buffer
 		ctx.Stderr = &stderr
@@ -33,7 +33,7 @@ func TestStatus(t *testing.T) {
 		})
 
 		Convey("With one argument", func() {
-			ctx := cli.NewContext([]string{"arg1"})
+			ctx.Args = []string{"arg1"}
 
 			Convey("It prints the USAGE statement", func() {
 				So(Run(ctx), ShouldEqual, 1)

@@ -3,17 +3,12 @@ package cli
 import (
 	"fmt"
 	"io"
-	"os"
 )
 
 type Context struct {
 	Args   []string
 	Stderr io.Writer
 	Stdout io.Writer
-}
-
-func NewContext(args []string) *Context {
-	return &Context{args, os.Stderr, os.Stdout}
 }
 
 func (ctx *Context) Print(objects ...interface{}) {

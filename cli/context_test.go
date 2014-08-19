@@ -9,7 +9,7 @@ import (
 
 func TestContext(t *testing.T) {
 	Convey("with a context", t, func() {
-		ctx := NewContext([]string{})
+		ctx := &Context{}
 		var stderr, stdout bytes.Buffer
 		ctx.Stderr = &stderr
 		ctx.Stdout = &stdout

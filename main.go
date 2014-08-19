@@ -11,7 +11,7 @@ var topics = []*cli.Topic{
 	status.Topic,
 }
 
-var ctx = cli.NewContext(os.Args[2:])
+var ctx = &cli.Context{Stdout: os.Stdout, Stderr: os.Stderr}
 var exit = os.Exit
 var args = os.Args
 
