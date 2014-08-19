@@ -8,5 +8,9 @@ platform:
   - x64
 build_script:
   - go get -t -v ./...
+  - go build -v
 test_script:
   - go test ./... -cover
+artifacts:
+  - path: h.exe
+    name: bin
