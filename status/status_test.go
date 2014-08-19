@@ -2,6 +2,9 @@ package status
 
 import (
 	"bytes"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/dickeyxxx/h/cli"
@@ -9,6 +12,17 @@ import (
 )
 
 func TestStatus(t *testing.T) {
+	Convey("it gets the status via HTTP", t, func() {
+		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprintln(w, `{"status":{"Production":"red","Development":"green"},"issues":[]}`)
+		}))
+		url = ts.URL
+		var response statusResponse
+		getStatus(&response)
+		So(response.Status.Production, ShouldEqual, "red")
+	})
+
 	Convey("With a status instance and context", t, func() {
 		ctx := &cli.Context{}
 		var stderr bytes.Buffer

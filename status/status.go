@@ -9,6 +9,8 @@ import (
 	"github.com/dickeyxxx/h/cli"
 )
 
+var url = "https://status.heroku.com/api/v3/current-status.json"
+
 type statusResponse struct {
 	Status struct {
 		Production  string
@@ -48,7 +50,7 @@ func Run(ctx *cli.Context) int {
 }
 
 var getStatus = func(response *statusResponse) {
-	resp, err := http.Get("https://status.heroku.com/api/v3/current-status.json")
+	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("Error connecting to status server. HTTP Code %d\n", resp.StatusCode)
 	}
