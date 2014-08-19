@@ -1,3 +1,4 @@
+version: {build}
 clone_depth: 1
 clone_folder: c:\src\github.com\dickeyxxx\h
 environment:
