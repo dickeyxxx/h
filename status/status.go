@@ -2,10 +2,11 @@ package status
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/dickeyxxx/h/cli"
 )
 
 type statusResponse struct {
@@ -28,30 +29,33 @@ type statusIssue struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type Status struct{}
-
-func (s *Status) Name() string {
-	return "status"
+var Topic = &cli.Topic{
+	Name: "status",
+	Run:  Run,
 }
 
-func (s *Status) Run(args ...string) int {
-	if len(args) != 0 {
-		log.Fatalln("USAGE")
+func Run(ctx *cli.Context) int {
+	if len(ctx.Args) != 0 {
+		ctx.ErrPrintln("USAGE")
+		return 1
 	}
+	var response statusResponse
+	getStatus(&response)
+	ctx.Println("=== Heroku Status")
+	ctx.Println("Development: ", statusText(response.Status.Development))
+	ctx.Println("Production:  ", statusText(response.Status.Production))
+	return 0
+}
+
+var getStatus = func(response *statusResponse) {
 	resp, err := http.Get("https://status.heroku.com/api/v3/current-status.json")
 	if err != nil {
 		log.Fatalf("Error connecting to status server. HTTP Code %d\n", resp.StatusCode)
 	}
-	var sr statusResponse
-	err = json.NewDecoder(resp.Body).Decode(&sr)
+	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
 		log.Fatalln("Error parsing json", err)
 	}
-
-	fmt.Println("=== Heroku Status")
-	fmt.Println("Development: ", statusText(sr.Status.Development))
-	fmt.Println("Production:  ", statusText(sr.Status.Production))
-	return 0
 }
 
 func statusText(status string) string {
@@ -59,8 +63,4 @@ func statusText(status string) string {
 		return "No known issues at this time."
 	}
 	return status
-}
-
-func New() *Status {
-	return &Status{}
 }
