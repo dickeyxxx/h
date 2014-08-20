@@ -46,6 +46,10 @@ func Run(ctx *cli.Context) int {
 	ctx.Println("=== Heroku Status")
 	ctx.Println("Development: ", statusText(response.Status.Development))
 	ctx.Println("Production:  ", statusText(response.Status.Production))
+	for _, issue := range response.Issues {
+		ctx.Println("=== ", issue.Title, issue.CreatedAt)
+		ctx.Println(issue)
+	}
 	return 0
 }
 
