@@ -37,7 +37,7 @@ var Topic = &cli.Topic{
 }
 
 func Run(ctx *cli.Context) int {
-	if len(ctx.Args) != 0 {
+	if len(ctx.Args) != 2 {
 		ctx.ErrPrintln("USAGE")
 		return 1
 	}

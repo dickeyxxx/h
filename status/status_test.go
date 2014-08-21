@@ -24,11 +24,13 @@ func TestStatus(t *testing.T) {
 	})
 
 	Convey("With a status instance and context", t, func() {
-		ctx := &cli.Context{}
 		var stderr bytes.Buffer
 		var stdout bytes.Buffer
-		ctx.Stderr = &stderr
-		ctx.Stdout = &stdout
+		ctx := &cli.Context{
+			Args:   []string{"heroku", "status"},
+			Stderr: &stderr,
+			Stdout: &stdout,
+		}
 		getStatus = func(response *statusResponse) {
 			response.Status.Production = "green"
 		}
@@ -46,8 +48,8 @@ func TestStatus(t *testing.T) {
 			So(stdout.String(), ShouldContainSubstring, "Production:   No known issues at this time.")
 		})
 
-		Convey("With one argument", func() {
-			ctx.Args = []string{"arg1"}
+		Convey("With three arguments", func() {
+			ctx.Args = []string{"heroku", "status", "foobar"}
 
 			Convey("It prints the USAGE statement", func() {
 				So(Run(ctx), ShouldEqual, 1)
