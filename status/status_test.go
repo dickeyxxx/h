@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/dickeyxxx/h/cli"
+	"github.com/dickeyxxx/hk/cli"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/dickeyxxx/h/cli"
+	"github.com/dickeyxxx/hk/cli"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -27,7 +27,7 @@ func TestMain(t *testing.T) {
 	Convey("with a wrong argument", t, func() {
 		args = []string{"heroku", "foobar?"}
 
-		Convey("it shows the help", func() {
+		Convey("it returns code 127", func() {
 			So(main, ShouldPanicWith, 127)
 		})
 	})

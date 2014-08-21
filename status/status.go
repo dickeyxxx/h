@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dickeyxxx/h/cli"
+	"github.com/dickeyxxx/hk/cli"
 )
 
 var url = "https://status.heroku.com/api/v3/current-status.json"
