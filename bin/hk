@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if [ ! -f ~/.hk/hk ]; then
+  case `uname -s` in
+    Darwin)
+      OS=darwin
+      ;;
+    Linux)
+      OS=linux
+      ;;
+    *)
+      echo "Unknown OS"
+      exit 1
+      ;;
+  esac
+  case `uname -m` in
+    i[3456]86)
+      ARCH=386
+      ;;
+    *)
+      ARCH=amd64
+      ;;
+  esac
+  HK_URL="https://s3.amazonaws.com/dickeyxxx_dev/releases/hk_"$OS"_"$ARCH".gz"
+  mkdir -p ~/.hk
+  cd ~/.hk
+  echo "Downloading hk..."
+  if [ -z `which wget` ]; then
+    curl -s $HK_URL | gunzip > ~/.hk/hk
+  else
+    wget -qO- $HK_URL | gunzip > ~/.hk/hk
+  fi
+  chmod +x ~/.hk/hk
+fi
+
+exec ~/.hk/hk "$@"
