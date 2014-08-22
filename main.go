@@ -9,6 +9,7 @@ import (
 
 	"github.com/dickeyxxx/hk/cli"
 	"github.com/dickeyxxx/hk/status"
+	. "github.com/dickeyxxx/hk/util"
 )
 
 var topics = []*cli.Topic{
@@ -45,20 +46,14 @@ func runCommand(ctx *cli.Context, topics []*cli.Topic) int {
 
 func runRubyCli() {
 	env := os.Environ()
-	err := syscall.Exec(homeDir()+"/.heroku/client/bin/heroku", ctx.Args, env)
-	must(err)
+	err := syscall.Exec(homeDir()+"/.hk/ruby/bin/heroku", ctx.Args, env)
+	Must(err)
 }
 
 func homeDir() string {
 	user, err := user.Current()
-	must(err)
+	Must(err)
 	return user.HomeDir
-}
-
-func must(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
 
 func hkDir() string {
@@ -74,9 +69,9 @@ func shouldAutoupdate() bool {
 
 func autoupdate() {
 	err := os.MkdirAll(hkDir(), 0777)
-	must(err)
+	Must(err)
 	file, err := os.OpenFile(hkDir()+"/autoupdate", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	must(err)
+	Must(err)
 	defer file.Close()
 	logger := log.New(file, "", log.LstdFlags)
 	logger.Println("checking for update")
