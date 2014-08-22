@@ -16,7 +16,6 @@ func hkURL() string {
 
 func updateHk(hkPath string) {
 	fmt.Println("Downloading hk...")
-	fmt.Println(filepath.Dir(hkPath))
 	Must(os.MkdirAll(filepath.Dir(hkPath), 0777))
 	out, err := os.Create(hkPath)
 	Must(err)
@@ -31,5 +30,4 @@ func updateHk(hkPath string) {
 	Must(err)
 	_, err = io.Copy(out, uncompressed)
 	Must(err)
-	fmt.Println("Downloaded hk...")
 }

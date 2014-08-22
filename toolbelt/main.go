@@ -2,10 +2,8 @@ package main
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
-	"syscall"
 )
 
 func main() {
@@ -18,20 +16,6 @@ func main() {
 	if !exists {
 		updateHk(hkPath)
 	}
-	os.Exit(run(hkPath))
-}
-
-func run(path string) int {
-	cmd := exec.Command(path, os.Args[1:]...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		if exitError, ok := err.(*exec.ExitError); ok {
-			if status, ok := exitError.Sys().(syscall.WaitStatus); ok {
-				return (status.ExitStatus())
-			}
-		}
-	}
-	return 0
+	err = run(hkPath, os.Args)
+	Must(err)
 }
