@@ -1,9 +1,10 @@
-package util
+package main
 
 import "os"
 
 func FileExists(path string) (bool, error) {
-	if _, err := os.Stat(path); err != nil {
+	_, err := os.Open(path)
+	if err != nil {
 		if os.IsNotExist(err) {
 			return false, nil
 		}

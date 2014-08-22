@@ -29,9 +29,9 @@ func main() {
 	if len(args) > 1 {
 		code = runCommand(ctx, topics)
 	}
-	if code == 127 {
-		runRubyCli()
-	}
+	//if code == 127 {
+	//runRubyCli()
+	//}
 	exit(code)
 }
 
