@@ -4,12 +4,10 @@ import (
 	"log"
 	"os"
 	"os/user"
-	"syscall"
 	"time"
 
 	"github.com/dickeyxxx/hk/cli"
 	"github.com/dickeyxxx/hk/status"
-	. "github.com/dickeyxxx/hk/util"
 )
 
 var topics = []*cli.Topic{
@@ -29,9 +27,9 @@ func main() {
 	if len(args) > 1 {
 		code = runCommand(ctx, topics)
 	}
-	//if code == 127 {
-	//runRubyCli()
-	//}
+	if code == 127 {
+		code = runRubyCli(os.Args[1:]...)
+	}
 	exit(code)
 }
 
@@ -44,15 +42,9 @@ func runCommand(ctx *cli.Context, topics []*cli.Topic) int {
 	return 127
 }
 
-func runRubyCli() {
-	env := os.Environ()
-	err := syscall.Exec(homeDir()+"/.hk/ruby/bin/heroku", ctx.Args, env)
-	Must(err)
-}
-
 func homeDir() string {
 	user, err := user.Current()
-	Must(err)
+	must(err)
 	return user.HomeDir
 }
 
@@ -69,9 +61,9 @@ func shouldAutoupdate() bool {
 
 func autoupdate() {
 	err := os.MkdirAll(hkDir(), 0777)
-	Must(err)
+	must(err)
 	file, err := os.OpenFile(hkDir()+"/autoupdate", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	Must(err)
+	must(err)
 	defer file.Close()
 	logger := log.New(file, "", log.LstdFlags)
 	logger.Println("checking for update")
