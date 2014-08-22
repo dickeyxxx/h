@@ -1,10 +1,7 @@
 package main
 
 import (
-	"log"
 	"os"
-	"os/user"
-	"time"
 
 	"github.com/dickeyxxx/hk/cli"
 	"github.com/dickeyxxx/hk/status"
@@ -44,31 +41,4 @@ func runCommand(ctx *cli.Context, topics []*cli.Topic) int {
 		}
 	}
 	return 127
-}
-
-func homeDir() string {
-	user, err := user.Current()
-	must(err)
-	return user.HomeDir
-}
-
-func hkDir() string {
-	return homeDir() + "/.hk"
-}
-
-func shouldAutoupdate() bool {
-	if f, err := os.Stat(hkDir() + "/autoupdate"); err == nil {
-		return f.ModTime().Add(4 * time.Second).Before(time.Now())
-	}
-	return true
-}
-
-func autoupdate() {
-	err := os.MkdirAll(hkDir(), 0777)
-	must(err)
-	file, err := os.OpenFile(hkDir()+"/autoupdate", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	must(err)
-	defer file.Close()
-	logger := log.New(file, "", log.LstdFlags)
-	logger.Println("checking for update")
 }
