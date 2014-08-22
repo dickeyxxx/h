@@ -10,7 +10,6 @@ import (
 	"os/user"
 	"path/filepath"
 	"runtime"
-	"strings"
 
 	. "github.com/dickeyxxx/hk/util"
 )
@@ -20,24 +19,12 @@ func main() {
 	if runtime.GOOS == "windows" {
 		hkPath = hkPath + ".exe"
 	}
-	err := runHk(hkPath, os.Args[1:])
-	if isNotExist(err) {
+	exists, err := FileExists(hkPath)
+	Must(err)
+	if !exists {
 		downloadHk(hkPath)
-		main()
-	} else if err != nil {
-		panic(err)
 	}
-}
-
-func isNotExist(err error) bool {
-	if err == nil {
-		return false
-	}
-	if os.IsNotExist(err) {
-		return true
-	}
-	// Windows hack
-	return strings.Contains(err.Error(), "file does not exist")
+	Must(runHk(hkPath, os.Args[1:]))
 }
 
 func runHk(hkPath string, args []string) error {
