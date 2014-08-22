@@ -1,6 +1,9 @@
 package main
 
-import "os/user"
+import (
+	"os/user"
+	"path/filepath"
+)
 
 func must(err error) {
 	if err != nil {
@@ -11,5 +14,5 @@ func must(err error) {
 func homeDir() string {
 	user, err := user.Current()
 	must(err)
-	return user.HomeDir
+	return filepath.Join(user.HomeDir, ".hk")
 }

@@ -19,7 +19,7 @@ func shouldAutoupdate() bool {
 }
 
 func autoupdate() {
-	err := os.MkdirAll(filepath.Base(autoupdatePath()), 0777)
+	err := os.MkdirAll(filepath.Dir(autoupdatePath()), 0777)
 	must(err)
 	file, err := os.OpenFile(autoupdatePath(), os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	must(err)
