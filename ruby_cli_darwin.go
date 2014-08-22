@@ -53,6 +53,7 @@ func downloadRubyCli() {
 			must(err)
 		} else {
 			file, err := os.Create(path)
+			defer file.Close()
 			_, err = io.Copy(file, archive)
 			must(err)
 		}
