@@ -14,7 +14,7 @@ func hkURL() string {
 	return "https://s3.amazonaws.com/dickeyxxx_dev/releases/hk_" + runtime.GOOS + "_" + runtime.GOARCH + ".gz"
 }
 
-func updateHk(hkPath string) {
+func downloadHk(hkPath string) {
 	fmt.Println("Downloading hk...")
 	Must(os.MkdirAll(filepath.Dir(hkPath), 0777))
 	out, err := os.Create(hkPath)

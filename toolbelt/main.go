@@ -14,7 +14,7 @@ func main() {
 	exists, err := FileExists(hkPath)
 	Must(err)
 	if !exists {
-		updateHk(hkPath)
+		downloadHk(hkPath)
 	}
 	err = run(hkPath, os.Args)
 	Must(err)
