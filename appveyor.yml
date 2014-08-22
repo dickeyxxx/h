@@ -3,9 +3,6 @@ clone_depth: 1
 clone_folder: c:\src\github.com\dickeyxxx\hk
 environment:
   GOPATH: c:\
-platform:
-  - x86
-  - x64
 build_script:
   - go get -t -v ./...
   - go build -v
