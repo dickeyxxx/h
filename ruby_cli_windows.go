@@ -3,21 +3,13 @@ package main
 import (
 	"os"
 	"os/exec"
-	"syscall"
 )
 
-func runRubyCli(args ...string) int {
-	cmd := exec.Command(homeDir()+"\\.hk\\heroku.exe", args...)
+func runRubyCli(args ...string) (int, error) {
+	path := filepaths.Join(homeDir(), ".hk", "heroku.exe")
+	cmd := exec.Command(path, args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		if exitError, ok := err.(*exec.ExitError); ok {
-			if status, ok := exitError.Sys().(syscall.WaitStatus); ok {
-				return (status.ExitStatus())
-			}
-		}
-		panic(err)
-	}
-	return 0
+	return 0, cmd.Run()
 }

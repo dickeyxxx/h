@@ -6,7 +6,7 @@ import (
 	"syscall"
 )
 
-func runRubyCli(args ...string) int {
+func runRubyCli(args ...string) (int, error) {
 	args = append([]string{homeDir() + "/.heroku/client/bin/heroku"}, args...)
 	cmd := exec.Command("ruby", args...)
 	cmd.Stdin = os.Stdin
@@ -15,10 +15,10 @@ func runRubyCli(args ...string) int {
 	if err := cmd.Run(); err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			if status, ok := exitError.Sys().(syscall.WaitStatus); ok {
-				return (status.ExitStatus())
+				return status.ExitStatus(), nil
 			}
 		}
-		panic(err)
+		return -1, err
 	}
-	return 0
+	return 0, nil
 }

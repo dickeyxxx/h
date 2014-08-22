@@ -28,7 +28,11 @@ func main() {
 		code = runCommand(ctx, topics)
 	}
 	if code == 127 {
-		code = runRubyCli(os.Args[1:]...)
+		var err error
+		code, err = runRubyCli(os.Args[1:]...)
+		if err != nil {
+			panic(err)
+		}
 	}
 	exit(code)
 }
