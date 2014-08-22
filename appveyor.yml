@@ -1,6 +1,6 @@
 version: "{build}"
 clone_depth: 1
-clone_folder: c:\src\github.com\dickeyxxx\h
+clone_folder: c:\src\github.com\dickeyxxx\hk
 environment:
   GOPATH: c:\
 platform:
@@ -12,5 +12,5 @@ build_script:
 test_script:
   - go test ./... -cover
 artifacts:
-  - path: h.exe
+  - path: hk.exe
     name: bin
