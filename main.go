@@ -27,9 +27,7 @@ func main() {
 	if code == 127 {
 		var err error
 		code, err = runRubyCli(os.Args[1:]...)
-		if err != nil {
-			panic(err)
-		}
+		must(err)
 	}
 	exit(code)
 }
