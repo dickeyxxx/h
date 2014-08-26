@@ -1,9 +1,16 @@
 package main
 
 import (
+	"os"
 	"os/user"
-	"path/filepath"
+	"runtime"
 )
+
+func homeDir() string {
+	user, err := user.Current()
+	must(err)
+	return user.HomeDir
+}
 
 func must(err error) {
 	if err != nil {
@@ -11,8 +18,19 @@ func must(err error) {
 	}
 }
 
-func homeDir() string {
-	user, err := user.Current()
-	must(err)
-	return filepath.Join(user.HomeDir, ".hk")
+func fileExists(path string) (bool, error) {
+	var err error
+	if runtime.GOOS == "windows" {
+		// Windows doesn't seem to like using os.Stat
+		_, err = os.Open(path)
+	} else {
+		_, err = os.Stat(path)
+	}
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }

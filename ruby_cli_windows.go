@@ -10,7 +10,7 @@ import (
 )
 
 func runRubyCli(args ...string) (int, error) {
-	exists, err := FileExists(rubyExe())
+	exists, err := fileExists(rubyExe())
 	must(err)
 	if !exists {
 		downloadRuby()
