@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -9,7 +10,11 @@ import (
 )
 
 func runRubyCli(args ...string) (int, error) {
-	downloadRuby()
+	exists, err := FileExists(rubyExe())
+	must(err)
+	if !exists {
+		downloadRuby()
+	}
 	cmd := exec.Command(rubyExe(), args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -22,6 +27,7 @@ func rubyExe() string {
 }
 
 func downloadRuby() {
+	fmt.Println("[hk.exe] heroku.exe not found. Downloading heroku.exe to", rubyExe())
 	out, err := os.Create(rubyExe())
 	must(err)
 	defer out.Close()
