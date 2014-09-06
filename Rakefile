@@ -56,7 +56,7 @@ def deploy(channel)
     upload_file(bucket, local_path + ".sha1", remote_path + ".sha1")
   end
   version_path = "hk/#{channel}/VERSION"
-  puts "setting to #{version_path} #{VERSION}"
+  puts "setting #{version_path} to #{VERSION}"
   upload_file(bucket, 'VERSION', version_path)
 end
 
