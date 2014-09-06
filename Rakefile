@@ -17,6 +17,11 @@ BRANCH = dirty ? 'dirty' : `git rev-parse --abbrev-ref HEAD`.chomp
 
 puts "hk VERSION: #{VERSION}"
 
+task :run do
+  build(nil, nil, './hk')
+  exec './hk', *ARGV[1..-1]
+end
+
 task :build do
   FileUtils.mkdir_p 'dist'
   TARGETS.each do |target|
