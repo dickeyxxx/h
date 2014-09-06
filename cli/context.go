@@ -6,13 +6,26 @@ import (
 )
 
 type Context struct {
-	Args   []string
-	Stderr io.Writer
-	Stdout io.Writer
+	Args    []string
+	Stderr  io.Writer
+	Stdout  io.Writer
+	Version string
+}
+
+func NewContext(stdout, stderr io.Writer) *Context {
+	return &Context{
+		Stdout:  stdout,
+		Stderr:  stderr,
+		Version: VERSION,
+	}
 }
 
 func (ctx *Context) Print(objects ...interface{}) {
 	fmt.Fprint(ctx.Stdout, objects...)
+}
+
+func (ctx *Context) Printf(format string, objects ...interface{}) {
+	fmt.Fprintf(ctx.Stdout, format, objects...)
 }
 
 func (ctx *Context) Println(objects ...interface{}) {

@@ -4,31 +4,30 @@ import (
 	"os"
 
 	"github.com/dickeyxxx/hk/cli"
-	"github.com/dickeyxxx/hk/status"
+	"github.com/dickeyxxx/hk/commands/status"
+	"github.com/dickeyxxx/hk/commands/version"
 )
 
 var topics = []*cli.Topic{
 	status.Topic,
+	version.Topic,
 }
 
-var ctx = &cli.Context{Stdout: os.Stdout, Stderr: os.Stderr}
+var ctx = cli.NewContext(os.Stdout, os.Stderr)
 var exit = os.Exit
 var args = os.Args
 
 func main() {
-	if shouldAutoupdate() {
-		autoupdate()
-	}
 	ctx.Args = args
 	code := 127
 	if len(args) > 1 {
 		code = runCommand(ctx, topics)
 	}
-	if code == 127 {
-		var err error
-		code, err = runRubyCli(os.Args[1:]...)
-		must(err)
-	}
+	//if code == 127 {
+	//var err error
+	//code, err = runRubyCli(os.Args[1:]...)
+	//must(err)
+	//}
 	exit(code)
 }
 
