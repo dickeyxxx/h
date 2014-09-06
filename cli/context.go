@@ -12,14 +12,6 @@ type Context struct {
 	Version string
 }
 
-func NewContext(stdout, stderr io.Writer) *Context {
-	return &Context{
-		Stdout:  stdout,
-		Stderr:  stderr,
-		Version: VERSION,
-	}
-}
-
 func (ctx *Context) Print(objects ...interface{}) {
 	fmt.Fprint(ctx.Stdout, objects...)
 }

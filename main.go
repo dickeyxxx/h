@@ -13,9 +13,14 @@ var topics = []*cli.Topic{
 	version.Topic,
 }
 
-var ctx = cli.NewContext(os.Stdout, os.Stderr)
+var ctx = &cli.Context{
+	Stdout:  os.Stdout,
+	Stderr:  os.Stderr,
+	Version: VERSION,
+}
 var exit = os.Exit
 var args = os.Args
+var VERSION string
 
 func main() {
 	ctx.Args = args
