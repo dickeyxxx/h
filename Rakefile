@@ -57,7 +57,7 @@ def deploy(channel)
   end
   version_path = "hk/#{channel}/VERSION"
   puts "setting #{version_path} to #{VERSION}"
-  upload_file(bucket, 'VERSION', version_path)
+  upload_string(bucket, VERSION, version_path)
 end
 
 def build(os, arch, path)
