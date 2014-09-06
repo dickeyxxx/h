@@ -1,4 +1,7 @@
 require 'digest'
+require 'aws-sdk'
+
+BUCKET_NAME = 'dickeyxxx_dev'
 
 TARGETS = [
   {os: 'darwin', arch: 'amd64'},
@@ -10,55 +13,57 @@ TARGETS = [
 
 VERSION = `./version.sh`.chomp
 
+puts "hk VERSION: #{VERSION}"
+
 task :build do
   FileUtils.mkdir_p 'dist'
-  puts "Building..."
   TARGETS.each do |target|
-    path = "dist/hk_#{target[:os]}_#{target[:arch]}"
-    puts "Building #{path}..."
+    path = "./dist/hk_#{target[:os]}_#{target[:arch]}"
+    puts "building #{path}..."
     build(target[:os], target[:arch], path)
-    gzip(path)
+  end
+end
+
+task :gzip => :build do
+  TARGETS.each do |target|
+    path = "./dist/hk_#{target[:os]}_#{target[:arch]}"
+    puts "gzipping #{path}..."
+    system("gzip --keep -f #{path}")
     write_digest("#{path}.gz")
   end
 end
 
 namespace :deploy do
-  task :release => :build do
-    require 'aws-sdk'
-    puts "Deploying #{VERSION}..."
-    bucket = get_s3_bucket
-    TARGETS.each do |target|
-      filename = "hk_#{target[:os]}_#{target[:arch]}.gz"
-      puts "Uploading #{filename}"
-      upload_file(bucket, "dist/#{filename}", "hk/#{VERSION}/#{filename}")
-      upload_file(bucket, "dist/#{filename}.sha1", "hk/#{VERSION}/#{filename}.sha1")
-    end
-    puts "setting VERSION to #{VERSION}"
-    upload_file(bucket, 'VERSION', 'hk/VERSION')
+  task :release => :gzip do
+    deploy(:release)
   end
 
-  task :dev => :build do
-    require 'aws-sdk'
-    puts "Deploying dev..."
-    bucket = get_s3_bucket
-    TARGETS.each do |target|
-      filename = "hk_#{target[:os]}_#{target[:arch]}.gz"
-      puts "Uploading #{filename}"
-      upload_file(bucket, "dist/#{filename}", "hk/dev/#{filename}")
-      upload_file(bucket, "dist/#{filename}.sha1", "hk/dev/#{filename}.sha1")
-    end
-    upload_string(bucket, VERSION, 'hk/dev/VERSION')
+  task :dev => :gzip do
+    deploy(:dev)
   end
+end
+
+def deploy(channel)
+  puts "deploying #{VERSION} to #{channel}..."
+  bucket = get_s3_bucket
+  TARGETS.each do |target|
+    filename = "hk_#{target[:os]}_#{target[:arch]}.gz"
+    local_path = "./dist/#{filename}"
+    remote_path = "hk/#{channel}/#{VERSION}/#{filename}"
+    remote_url = "#{BUCKET_NAME}.s3.amazonaws.com/#{remote_path}"
+    puts "uploading #{local_path} to #{remote_url}"
+    upload_file(bucket, local_path, remote_path)
+    upload_file(bucket, local_path + ".sha1", remote_path + ".sha1")
+  end
+  version_path = "hk/#{channel}/VERSION"
+  puts "setting to #{version_path} #{VERSION}"
+  upload_file(bucket, 'VERSION', version_path)
 end
 
 def build(os, arch, path)
   ldflags = "-X main.VERSION #{VERSION}"
   args = "-o #{path} -ldflags \"#{ldflags}\""
   system("GOOS=#{os} GOARCH=#{arch} go build #{args}")
-end
-
-def gzip(path)
-  system("gzip -f #{path}")
 end
 
 def write_digest(path)
@@ -68,7 +73,7 @@ end
 
 def get_s3_bucket
   s3 = AWS::S3.new
-  s3.buckets['dickeyxxx_dev']
+  s3.buckets[BUCKET_NAME]
 end
 
 def upload_file(bucket, local, remote)
