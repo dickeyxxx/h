@@ -12,7 +12,7 @@ TARGETS = [
 ]
 
 VERSION = `./version.sh`.chomp
-dirty = `git status 2> /dev/null | tail -n1`.chomp.empty? != 'nothing to commit, working directory clean'
+dirty = `git status 2> /dev/null | tail -n1`.chomp != 'nothing to commit, working directory clean'
 BRANCH = dirty ? 'dirty' : `git rev-parse --abbrev-ref HEAD`.chomp
 
 puts "hk VERSION: #{VERSION}"
