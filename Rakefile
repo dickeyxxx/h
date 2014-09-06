@@ -37,12 +37,12 @@ end
 
 task :deploy => :gzip do
   case BRANCH
-  when 'master'
+  when 'dev'
     deploy('dev')
   when 'release'
     deploy('release')
   else
-    puts 'not on deployable branch (master/release) current branch is: ' + BRANCH
+    puts 'not on deployable branch (dev/release) current branch is: ' + BRANCH
   end
 end
 
